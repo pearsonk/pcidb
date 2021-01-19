@@ -10,7 +10,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jaypipes/pcidb"
+	"github.com/pearsonk/pcidb"
 )
 
 func TestPCI(t *testing.T) {

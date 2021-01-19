@@ -15,6 +15,7 @@ type context struct {
 	chroot              string
 	cacheOnly           bool
 	cachePath           string
+	directPath          string
 	disableNetworkFetch bool
 	searchPaths         []string
 }
@@ -25,6 +26,7 @@ func contextFromOptions(merged *WithOption) *context {
 		cacheOnly:           *merged.CacheOnly,
 		cachePath:           getCachePath(),
 		disableNetworkFetch: *merged.DisableNetworkFetch,
+		directPath:          *merged.DirectPath,
 		searchPaths:         make([]string, 0),
 	}
 	ctx.setSearchPaths()
@@ -48,6 +50,9 @@ func getCachePath() string {
 // Depending on the operating system, sets the context's searchPaths to a set
 // of local filepaths to search for a pci.ids database file
 func (ctx *context) setSearchPaths() {
+	//if ctx.directPath != "" {
+	//		ctx.searchPaths = append(ctx.searchPaths, ctx.directPath)
+	//	}
 	// A set of filepaths we will first try to search for the pci-ids DB file
 	// on the local machine. If we fail to find one, we'll try pulling the
 	// latest pci-ids file from the network

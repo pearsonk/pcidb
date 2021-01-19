@@ -93,6 +93,9 @@ type WithOption struct {
 	// Useful for secure environments or environments with no network
 	// connectivity.
 	DisableNetworkFetch *bool
+	// DirectPath points to the absolute path of a pci.ids file in a non-standard
+	// location.
+	DirectPath *string
 }
 
 func WithChroot(dir string) *WithOption {
@@ -112,6 +115,10 @@ func mergeOptions(opts ...*WithOption) *WithOption {
 	defaultChroot := "/"
 	if val, exists := os.LookupEnv("PCIDB_CHROOT"); exists {
 		defaultChroot = val
+	}
+	directPath := ""
+	if val, exists := os.LookupEnv("PCIDB_DIRECT"); exists {
+		directPath = val
 	}
 	defaultCacheOnly := false
 	if val, exists := os.LookupEnv("PCIDB_CACHE_ONLY"); exists {
@@ -151,6 +158,9 @@ func mergeOptions(opts ...*WithOption) *WithOption {
 		if opt.DisableNetworkFetch != nil {
 			merged.DisableNetworkFetch = opt.DisableNetworkFetch
 		}
+		if opt.DirectPath != nil {
+			merged.DirectPath = opt.DirectPath
+		}
 	}
 	// Set the default value if missing from merged
 	if merged.Chroot == nil {
@@ -161,6 +171,9 @@ func mergeOptions(opts ...*WithOption) *WithOption {
 	}
 	if merged.DisableNetworkFetch == nil {
 		merged.DisableNetworkFetch = &defaultDisableNetworkFetch
+	}
+	if merged.DirectPath == nil {
+		merged.DirectPath = &directPath
 	}
 	return merged
 }
